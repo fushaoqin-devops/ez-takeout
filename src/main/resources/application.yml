@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ez_take_out
+  datasource:
+    druid:
+      driver-class-name: ${jdbc.driver}
+      url: ${jdbc.url}
+      username: ${jdbc.username}
+      password: ${jdbc.password}
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
