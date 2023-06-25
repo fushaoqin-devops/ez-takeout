@@ -2,6 +2,7 @@ package com.shaoqin.ez_take_out.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  * Create 6/23/23 10:24 PM
  * Version 1.0
  */
+@Data
 public class Employee  implements Serializable {
 
     @Serial
