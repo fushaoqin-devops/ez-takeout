@@ -116,4 +116,12 @@ public class EmployeeController {
         return R.success(pageInfo);
     }
 
+    @PutMapping
+    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser((Long) request.getSession().getAttribute("employee"));
+        employeeService.updateById(employee);
+        return R.success("Employee updated");
+    }
+
 }
