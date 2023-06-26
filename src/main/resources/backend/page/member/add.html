@@ -121,7 +121,15 @@
                   required: true, 'validator': checkUserName, trigger: 'blur'
                 },
                 {
-                  required: true, validator: this.checkUserName, trigger: 'blur'
+                  required: true,
+                  validator: (rule, value, callback) => {
+                    if (this.actionType === 'add') {
+                      this.checkUserName(rule, value, callback);
+                    } else {
+                      callback();
+                    }
+                  },
+                  trigger: 'blur'
                 }
               ],
               name: [{ required: true, 'validator': checkName, 'trigger': 'blur' }],
