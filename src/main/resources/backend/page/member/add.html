@@ -107,7 +107,8 @@
                 'sex': 'Male',
                 'idNumber': '',
                 username: ''
-            }
+            },
+            usernameTimeout: null
           }
         },
         computed: {
@@ -116,6 +117,9 @@
               username: [
                 {
                   required: true, 'validator': checkUserName, trigger: 'blur'
+                },
+                {
+                  required: true, validator: this.checkUserName, trigger: 'blur'
                 }
               ],
               name: [{ required: true, 'validator': checkName, 'trigger': 'blur' }],
@@ -195,6 +199,19 @@
                 return false
               }
             })
+          },
+          checkUserName(rule, value, callback) {
+            if (this.usernameTimeout) {
+              clearTimeout(this.usernameTimeout);
+            }
+            this.usernameTimeout = setTimeout(() => {
+              const params = { username: value };
+              checkEmployeeUsername(params).then(res => {
+                this.callback();
+              }).catch(err => {
+                callback(new Error('Username already exists.'));
+              });
+            }, 500)
           },
           goBack(){
             window.parent.menuHandle({

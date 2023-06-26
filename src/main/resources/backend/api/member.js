@@ -24,6 +24,14 @@ function addEmployee (params) {
   })
 }
 
+function checkEmployeeUsername (params) {
+  return $axios({
+    url: '/employee/check-username',
+    method: 'post',
+    data: { ...params }
+  })
+}
+
 // 修改---添加员工
 function editEmployee (params) {
   return $axios({

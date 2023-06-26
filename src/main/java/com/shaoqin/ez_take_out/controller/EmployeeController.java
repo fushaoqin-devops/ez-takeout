@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 /**
  * ClassName: EmployeeController
  * Package: com.shaoqin.ez_take_out.controller
@@ -29,6 +31,12 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * Handle login
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
         // Encrypt md5
@@ -54,11 +62,46 @@ public class EmployeeController {
         return R.success(emp);
     }
 
+    /**
+     * Handle logout
+     * @param request
+     * @return
+     */
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request) {
         // Remove user from session
         request.getSession().removeAttribute("employee");
         return R.success("Logout success");
+    }
+
+    /**
+     * Add new employee
+     * @param employee
+     * @return
+     */
+    @PostMapping()
+    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        Long empId = (Long) request.getSession().getAttribute("employee");
+        employee.setCreateUser(empId);
+        employee.setUpdateUser(empId);
+
+        employeeService.save(employee);
+
+        return R.success("Employee added");
+    }
+
+    @PostMapping("check-username")
+    public R<String> checkUsername(@RequestBody Employee employee) {
+        // Get user by username
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Employee::getUsername, employee.getUsername());
+        Employee emp = employeeService.getOne(queryWrapper);
+
+        return emp == null ? R.success("Username can be used") : R.error("Username already exists");
     }
 
 }
