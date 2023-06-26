@@ -1,17 +1,17 @@
 package com.shaoqin.ez_take_out.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shaoqin.ez_take_out.common.R;
+import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Employee;
 import com.shaoqin.ez_take_out.service.EmployeeService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -94,7 +94,7 @@ public class EmployeeController {
         return R.success("Employee added");
     }
 
-    @PostMapping("check-username")
+    @PostMapping("/check-username")
     public R<String> checkUsername(@RequestBody Employee employee) {
         // Get user by username
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
@@ -102,6 +102,18 @@ public class EmployeeController {
         Employee emp = employeeService.getOne(queryWrapper);
 
         return emp == null ? R.success("Username can be used") : R.error("Username already exists");
+    }
+
+    @GetMapping("/page")
+    public R<Page> page(PageDto pageDto) {
+        Page pageInfo = new Page(pageDto.getPage(), pageDto.getPageSize());
+
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.like(StringUtils.isNotEmpty(pageDto.getName()), Employee::getName, pageDto.getName());
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+
+        employeeService.page(pageInfo, queryWrapper);
+        return R.success(pageInfo);
     }
 
 }

@@ -108,7 +108,9 @@
                 'idNumber': '',
                 username: ''
             },
-            usernameTimeout: null
+            usernameTimeout: null,
+            prevUsername: '',
+            usernameError: ''
           }
         },
         computed: {
@@ -201,15 +203,31 @@
             })
           },
           checkUserName(rule, value, callback) {
+            if (this.prevUsername === this.ruleForm.username) {
+              if (this.usernameError) {
+                return callback(new Error(this.usernameError));
+              } else {
+                return callback();
+              }
+            }
+            this.prevUsername = this.ruleForm.username;
+
             if (this.usernameTimeout) {
               clearTimeout(this.usernameTimeout);
             }
             this.usernameTimeout = setTimeout(() => {
               const params = { username: value };
               checkEmployeeUsername(params).then(res => {
-                this.callback();
+                if (res.code == 1) {
+                  this.usernameError = '';
+                  callback();
+                } else {
+                  msg = 'Username already exists';
+                  this.usernameError = msg;
+                  callback(new Error(msg));
+                }
               }).catch(err => {
-                callback(new Error('Username already exists.'));
+                callback(new Error('Failed to check username'));
               });
             }, 500)
           },
