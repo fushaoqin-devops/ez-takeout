@@ -61,6 +61,7 @@
             v-model="ruleForm.idNumber"
             placeholder="Please enter SSN"
             maxlength="20"
+            @input="formatSSN"
           />
         </el-form-item>
         <div class="subBox address">
@@ -159,6 +160,21 @@
                 this.$message.error(res.msg || 'Operation failed')
               }
             })
+          },
+          formatSSN() {
+            // Remove any non-digit characters from the input value
+            const digitsOnly = this.ruleForm.idNumber.replace(/\D/g, '');
+
+            // Apply the SSN format (###-##-####)
+            let formatted = '';
+            for (let i = 0; i < digitsOnly.length; i++) {
+              if (i === 3 || i === 5) {
+                formatted += '-';
+              }
+              formatted += digitsOnly.charAt(i);
+            }
+
+            this.ruleForm.idNumber = formatted;
           },
           submitForm (formName, st) {
             this.$refs[formName].validate((valid) => {
