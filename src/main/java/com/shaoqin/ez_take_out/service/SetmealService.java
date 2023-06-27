@@ -1,18 +1,16 @@
 package com.shaoqin.ez_take_out.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.shaoqin.ez_take_out.entity.Category;
+import com.shaoqin.ez_take_out.entity.Setmeal;
 
 /**
- * ClassName: CategoryService
+ * ClassName: SetmealService
  * Package: com.shaoqin.ez_take_out.service
  * Description:
  * Author Shaoqin
- * Create 6/26/23 7:57 PM
+ * Create 6/27/23 1:13 PM
  * Version 1.0
  */
-public interface CategoryService extends IService<Category> {
-
-    public void remove(Long id);
+public interface SetmealService extends IService<Setmeal> {
 
 }

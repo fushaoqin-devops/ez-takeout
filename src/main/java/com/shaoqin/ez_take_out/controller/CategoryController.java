@@ -45,10 +45,16 @@ public class CategoryController {
         return R.success(pageInfo);
     }
 
-    @DeleteMapping("/{id}")
-    public R<String> delete(@PathVariable("id") Long id) {
-        categoryService.removeById(id);
+    @DeleteMapping
+    public R<String> delete(@RequestParam("id") Long id) {
+        categoryService.remove(id);
         return R.success("Category deleted");
+    }
+
+    @PutMapping
+    public R<String> update(@RequestBody Category category) {
+        categoryService.updateById(category);
+        return R.success("Category updated");
     }
 
 }
