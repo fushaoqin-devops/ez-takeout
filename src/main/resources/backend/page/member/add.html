@@ -42,6 +42,7 @@
             v-model="ruleForm.phone"
             placeholder="Please enter phone number"
             maxlength="20"
+            @input="formatPhoneNumber"
           />
         </el-form-item>
         <el-form-item
@@ -160,6 +161,27 @@
                 this.$message.error(res.msg || 'Operation failed')
               }
             })
+          },
+          formatPhoneNumber() {
+            // Remove any non-digit characters from the input value
+            const digitsOnly = this.ruleForm.phone.replace(/\D/g, '');
+
+            // Apply the phone number format (###-###-####)
+            let formatted = '';
+            for (let i = 0; i < digitsOnly.length; i++) {
+              if (i === 0) {
+                formatted += '(';
+              }
+              if (i === 3) {
+                formatted += ') ';
+              }
+              if (i === 6) {
+                formatted += '-';
+              }
+              formatted += digitsOnly.charAt(i);
+            }
+
+            this.ruleForm.phone = formatted;
           },
           formatSSN() {
             // Remove any non-digit characters from the input value

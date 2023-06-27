@@ -8,7 +8,7 @@ function isExternal (path) {
 }
 
 function isCellPhone (val) {
-  return /^(?:\+1)?[2-9]\d{9}$/.test(val);
+  return /(^\([2-9]\d{2}\)\s\d{3}-\d{4}$)/.test(val);
 }
 
 //Validate username
