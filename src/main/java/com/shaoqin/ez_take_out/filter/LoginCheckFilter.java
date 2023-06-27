@@ -1,6 +1,7 @@
 package com.shaoqin.ez_take_out.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.shaoqin.ez_take_out.common.BaseContext;
 import com.shaoqin.ez_take_out.common.R;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -51,6 +52,9 @@ public class LoginCheckFilter implements Filter {
         }
 
         if (request.getSession().getAttribute("employee") != null) {
+            Long empId = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(empId);
+
             filterChain.doFilter(request, response);
             return;
         }
