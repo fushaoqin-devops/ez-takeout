@@ -32,4 +32,6 @@ public interface DishService extends IService<Dish> {
 
     public long getDishCountByCategoryId(Long id);
 
+    public List<Dish> getDishByCategoryId(Dish dish);
+
 }

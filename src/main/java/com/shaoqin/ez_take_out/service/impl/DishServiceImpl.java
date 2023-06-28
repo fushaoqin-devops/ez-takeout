@@ -137,4 +137,14 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         return this.count(dishLambdaQueryWrapper);
     }
 
+    @Override
+    public List<Dish> getDishByCategoryId(Dish dish) {
+        LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper
+                .eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId())
+                .eq(Dish::getStatus, 1);
+        lambdaQueryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        return this.list(lambdaQueryWrapper);
+    }
+
 }

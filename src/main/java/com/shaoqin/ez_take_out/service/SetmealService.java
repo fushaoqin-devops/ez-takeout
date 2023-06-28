@@ -1,6 +1,9 @@
 package com.shaoqin.ez_take_out.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoqin.ez_take_out.dto.PageDto;
+import com.shaoqin.ez_take_out.dto.SetmealDto;
 import com.shaoqin.ez_take_out.entity.Setmeal;
 
 /**
@@ -14,5 +17,9 @@ import com.shaoqin.ez_take_out.entity.Setmeal;
 public interface SetmealService extends IService<Setmeal> {
 
     public Long getSetmealCountByCategoryId(Long id);
+
+    public void saveWithDish(SetmealDto setmealDto);
+
+    public Page<SetmealDto> getSetmealPage(PageDto pageDto);
 
 }

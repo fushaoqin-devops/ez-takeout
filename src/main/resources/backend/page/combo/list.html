@@ -8,6 +8,13 @@
   <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
   <link rel="stylesheet" href="../../styles/common.css" />
   <link rel="stylesheet" href="../../styles/page.css" />
+  <!-- Needed to prevent checkbox from moving -->
+  <style>
+    .el-table th:first-child > .cell,
+    .el-table td:first-child > .cell {
+      width: 50px;
+    }
+  </style>
 </head>
 <body>
    <div class="dashboard-container" id="combo-app">
@@ -75,7 +82,7 @@
           label="Combo Price"
         >
           <template slot-scope="scope">
-            <span>￥{{ scope.row.price/100 }}</span>
+            <span>$ {{ scope.row.price/100 }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Sale Status">

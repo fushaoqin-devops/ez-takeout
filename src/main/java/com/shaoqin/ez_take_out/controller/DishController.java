@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shaoqin.ez_take_out.common.R;
 import com.shaoqin.ez_take_out.dto.DishDto;
 import com.shaoqin.ez_take_out.dto.PageDto;
+import com.shaoqin.ez_take_out.entity.Dish;
 import com.shaoqin.ez_take_out.service.DishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +61,12 @@ public class DishController {
     public R<String> delete(@RequestParam("ids") List<String> ids) {
         dishService.deleteDish(ids);
         return R.success("Dish deleted");
+    }
+
+    @GetMapping("/list")
+    public R<List<Dish>> list(Dish dish) {
+        List<Dish> list = dishService.getDishByCategoryId(dish);
+        return R.success(list);
     }
 
 }
