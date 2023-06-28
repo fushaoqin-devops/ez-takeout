@@ -1,6 +1,7 @@
 package com.shaoqin.ez_take_out.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoqin.ez_take_out.dto.DishDto;
 import com.shaoqin.ez_take_out.entity.Dish;
 
 /**
@@ -12,5 +13,11 @@ import com.shaoqin.ez_take_out.entity.Dish;
  * Version 1.0
  */
 public interface DishService extends IService<Dish> {
+
+    public void saveWithFlavor(DishDto dishDto);
+
+    public DishDto getByIdWithFlavor(Long id);
+
+    public void updateWithFlavor(DishDto dishDto);
 
 }

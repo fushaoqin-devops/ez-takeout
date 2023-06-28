@@ -15,3 +15,5 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
+ez_take_out:
+  path: /Users/shaoqin/Downloads/test/
