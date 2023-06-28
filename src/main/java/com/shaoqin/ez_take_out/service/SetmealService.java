@@ -13,4 +13,6 @@ import com.shaoqin.ez_take_out.entity.Setmeal;
  */
 public interface SetmealService extends IService<Setmeal> {
 
+    public Long getSetmealCountByCategoryId(Long id);
+
 }

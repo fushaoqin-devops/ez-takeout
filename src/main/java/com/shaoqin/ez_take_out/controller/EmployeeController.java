@@ -31,56 +31,21 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    /**
-     * Handle login
-     * @param request
-     * @param employee
-     * @return
-     */
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
-        // Encrypt md5
-        String password = employee.getPassword();
-        password = DigestUtils.md5DigestAsHex(password.getBytes());
-
-        // Get user by username
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::getUsername, employee.getUsername());
-        Employee emp = employeeService.getOne(queryWrapper);
-
-        // Check if user exists
-        if (emp == null) return R.error("Login failed");
-
-        // Validate password
-        if (!emp.getPassword().equals(password)) return R.error("Login failed");
-
-        // Check user status
-        if (emp.getStatus() == 0) return R.error("Account disabled");
-
-        // Store user info in session
-        request.getSession().setAttribute("employee", emp.getId());
-        return R.success(emp);
+        R<Employee> result = employeeService.validateEmployeeLogin(employee);
+        if (result.getCode() == 1)  request.getSession().setAttribute("employee", result.getData().getId());
+        return result;
     }
 
-    /**
-     * Handle logout
-     * @param request
-     * @return
-     */
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request) {
-        // Remove user from session
         request.getSession().removeAttribute("employee");
         return R.success("Logout success");
     }
 
-    /**
-     * Add new employee
-     * @param employee
-     * @return
-     */
     @PostMapping()
-    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+    public R<String> save(@RequestBody Employee employee) {
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         employeeService.save(employee);
 
@@ -89,23 +54,13 @@ public class EmployeeController {
 
     @PostMapping("/check-username")
     public R<String> checkUsername(@RequestBody Employee employee) {
-        // Get user by username
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::getUsername, employee.getUsername());
-        Employee emp = employeeService.getOne(queryWrapper);
-
+        Employee emp = employeeService.getEmployeeByUsername(employee);
         return emp == null ? R.success("Username can be used") : R.error("Username already exists");
     }
 
     @GetMapping("/page")
-    public R<Page> page(PageDto pageDto) {
-        Page pageInfo = new Page(pageDto.getPage(), pageDto.getPageSize());
-
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.like(StringUtils.isNotEmpty(pageDto.getName()), Employee::getName, pageDto.getName());
-        queryWrapper.orderByDesc(Employee::getUpdateTime);
-
-        employeeService.page(pageInfo, queryWrapper);
+    public R<Page<Employee>> page(PageDto pageDto) {
+        Page<Employee> pageInfo = employeeService.getEmployeePage(pageDto);
         return R.success(pageInfo);
     }
 
@@ -118,7 +73,6 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public R<Employee> get(@PathVariable("id") Long id) {
         Employee employee = employeeService.getById(id);
-
         return employee != null ? R.success(employee) : R.error("No employee record found");
     }
 

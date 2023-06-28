@@ -1,8 +1,10 @@
 package com.shaoqin.ez_take_out.controller;
 
 import com.shaoqin.ez_take_out.common.R;
+import com.shaoqin.ez_take_out.service.FileService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,38 +29,19 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/common")
 public class CommonController {
-    @Value("${ez_take_out.path}")
-    private String basePath;
+
+    @Autowired
+    private FileService fileService;
 
     @PostMapping("/upload")
     public R<String> upload(MultipartFile file) throws IOException {
-        String originalFilename = file.getOriginalFilename();
-        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String filename = UUID.randomUUID().toString() + fileExtension;
-
-        File dir = new File(basePath);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        file.transferTo(new File(basePath + filename));
-
+        String filename = fileService.uploadFile(file);
         return R.success(filename);
     }
 
     @GetMapping("/download")
     public void download(String name, HttpServletResponse response) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(new File(basePath + name));
-        ServletOutputStream outputStream = response.getOutputStream();
-        response.setContentType("image/jpeg");
-        byte[] bytes = new byte[1024];
-        int len = 0;
-        while ( (len = fileInputStream.read(bytes)) != -1) {
-            outputStream.write(bytes, 0, len);
-            outputStream.flush();
-        }
-
-        outputStream.close();
-        fileInputStream.close();
+        fileService.downloadFile(name, response);
     }
 
 }

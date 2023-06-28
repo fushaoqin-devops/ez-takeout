@@ -33,9 +33,6 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
-    @Autowired
-    private CategoryService categoryService;
-
     @PostMapping
     public R<String> save(@RequestBody DishDto dishDto) {
         dishService.saveWithFlavor(dishDto);
@@ -43,32 +40,9 @@ public class DishController {
     }
 
     @GetMapping("/page")
-    public R<Page> page(PageDto pageDto) {
-        Page<Dish> pageInfo = new Page<>(pageDto.getPage(), pageDto.getPageSize());
-        Page<DishDto> dishDtoPageInfo = new Page<>();
-
-        LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(pageDto.getName() != null, Dish::getName, pageDto.getName());
-        lambdaQueryWrapper.orderByDesc(Dish::getUpdateTime);
-
-        dishService.page(pageInfo, lambdaQueryWrapper);
-
-        BeanUtils.copyProperties(pageInfo, dishDtoPageInfo, "records");
-
-        // convert original list of dish to list of dish dto to include category name
-        List<Dish> records = pageInfo.getRecords();
-        List<DishDto> list = records.stream().map(record -> {
-            DishDto dishDto = new DishDto();
-            BeanUtils.copyProperties(record, dishDto);
-            Long categoryId = record.getCategoryId();
-            Category category = categoryService.getById(categoryId);
-            dishDto.setCategoryName(category.getName());
-            return dishDto;
-        }).collect(Collectors.toList());
-
-        dishDtoPageInfo.setRecords(list);
-
-        return R.success(dishDtoPageInfo);
+    public R<Page<DishDto>> page(PageDto pageDto) {
+        Page<DishDto> dishDtoPage = dishService.getDishPage(pageDto);
+        return R.success(dishDtoPage);
     }
 
     @GetMapping("/{id}")
@@ -80,21 +54,18 @@ public class DishController {
     @PutMapping
     public R<String> update(@RequestBody DishDto dishDto) {
         dishService.updateWithFlavor(dishDto);
-
         return R.success("Dish updated");
     }
 
     @PostMapping("/status/{status}")
     public R<String> changeStatus(@PathVariable("status") Integer status, @RequestParam("ids") List<String> ids) {
         dishService.updateStatus(status, ids);
-
         return R.success("Status updated");
     }
 
     @DeleteMapping
     public R<String> delete(@RequestParam("ids") List<String> ids) {
         dishService.deleteDish(ids);
-
         return R.success("Dish deleted");
     }
 

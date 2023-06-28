@@ -1,7 +1,9 @@
 package com.shaoqin.ez_take_out.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.shaoqin.ez_take_out.dto.DishDto;
+import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Dish;
 
 import java.util.List;
@@ -25,5 +27,9 @@ public interface DishService extends IService<Dish> {
     public void updateStatus(Integer status, List<String> ids);
 
     public void deleteDish(List<String> ids);
+
+    public Page<DishDto> getDishPage(PageDto pageDto);
+
+    public long getDishCountByCategoryId(Long id);
 
 }

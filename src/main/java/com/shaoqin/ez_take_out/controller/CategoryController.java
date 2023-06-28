@@ -6,6 +6,8 @@ import com.shaoqin.ez_take_out.common.R;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Category;
 import com.shaoqin.ez_take_out.service.CategoryService;
+import com.shaoqin.ez_take_out.service.DishService;
+import com.shaoqin.ez_take_out.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,12 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private DishService dishService;
+
+    @Autowired
+    private SetmealService setmealService;
+
     @PostMapping
     public R<String> save(@RequestBody Category category) {
         categoryService.save(category);
@@ -35,19 +43,16 @@ public class CategoryController {
     }
 
     @GetMapping("/page")
-    public R<Page> page(PageDto pageDto) {
-        Page<Category> pageInfo = new Page<>(pageDto.getPage(), pageDto.getPageSize());
-
-        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.orderByDesc(Category::getSort);
-
-        categoryService.page(pageInfo, queryWrapper);
+    public R<Page<Category>> page(PageDto pageDto) {
+        Page<Category> pageInfo = categoryService.getCategoryPage(pageDto);
         return R.success(pageInfo);
     }
 
     @DeleteMapping
     public R<String> delete(@RequestParam("id") Long id) {
-        categoryService.remove(id);
+        long dishCount = dishService.getDishCountByCategoryId(id);
+        long setmealCount = setmealService.getSetmealCountByCategoryId(id);
+        categoryService.remove(id, dishCount, setmealCount);
         return R.success("Category deleted");
     }
 
@@ -59,10 +64,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     public R<List<Category>> list(Category category) {
-        LambdaQueryWrapper<Category> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(category.getType() != null, Category::getType, category.getType());
-        lambdaQueryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
-        List<Category> list = categoryService.list(lambdaQueryWrapper);
+        List<Category> list = categoryService.getCategoryList(category);
         return R.success(list);
     }
 

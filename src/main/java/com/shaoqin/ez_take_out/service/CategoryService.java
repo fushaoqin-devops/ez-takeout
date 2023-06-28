@@ -1,7 +1,11 @@
 package com.shaoqin.ez_take_out.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Category;
+
+import java.util.List;
 
 /**
  * ClassName: CategoryService
@@ -13,6 +17,10 @@ import com.shaoqin.ez_take_out.entity.Category;
  */
 public interface CategoryService extends IService<Category> {
 
-    public void remove(Long id);
+    public void remove(Long id, Long dishCount, Long setmealCount);
+
+    public List<Category> getCategoryList(Category category);
+
+    public Page<Category> getCategoryPage(PageDto pageDto);
 
 }
