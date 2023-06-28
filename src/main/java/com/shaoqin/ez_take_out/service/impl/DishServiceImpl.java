@@ -3,6 +3,7 @@ package com.shaoqin.ez_take_out.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shaoqin.ez_take_out.common.CustomException;
 import com.shaoqin.ez_take_out.dto.DishDto;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Category;
@@ -81,10 +82,10 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     @Transactional
-    public void updateStatus(Integer status, List<String> ids) {
+    public void updateStatus(Integer status, List<Long> ids) {
         List<Dish> list = ids.stream().map(id -> {
             Dish dish = new Dish();
-            dish.setId(Long.parseLong(id));
+            dish.setId(id);
             dish.setStatus(status);
             return dish;
         }).toList();
@@ -93,13 +94,18 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     @Transactional
-    public void deleteDish(List<String> ids) {
-        List<Long> list = ids.stream().map(Long::parseLong).toList();
-        LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(DishFlavor::getDishId, list);
-        this.removeBatchByIds(list);
-        // remove dish flavors that's linked to the dishes
-        dishFlavorService.remove(lambdaQueryWrapper);
+    public void deleteDish(List<Long> ids) {
+        LambdaQueryWrapper<Dish> dishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        dishLambdaQueryWrapper.in(Dish::getId, ids).eq(Dish::getStatus, 1);
+        long count = this.count(dishLambdaQueryWrapper);
+        if (count > 0) {
+            throw new CustomException("Dish is still on sale, cannot delete");
+        }
+        this.removeBatchByIds(ids);
+
+        LambdaQueryWrapper<DishFlavor> dishFlavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        dishFlavorLambdaQueryWrapper.in(DishFlavor::getDishId, ids);
+        dishFlavorService.remove(dishFlavorLambdaQueryWrapper);
     }
 
     @Override

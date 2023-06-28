@@ -3,6 +3,7 @@ package com.shaoqin.ez_take_out.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shaoqin.ez_take_out.common.CustomException;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.dto.SetmealDto;
 import com.shaoqin.ez_take_out.entity.Category;
@@ -81,6 +82,33 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         setmealDtoPage.setRecords(list);
 
         return setmealDtoPage;
+    }
+
+    @Override
+    @Transactional
+    public void removeWithDish(List<Long> ids) {
+        LambdaQueryWrapper<Setmeal> setmealLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealLambdaQueryWrapper.in(Setmeal::getId, ids).eq(Setmeal::getStatus, 1);
+        long count = this.count(setmealLambdaQueryWrapper);
+        if (count > 0) {
+            throw new CustomException("Combo is still on sale, cannot delete");
+        }
+        this.removeBatchByIds(ids);
+
+        LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealDishLambdaQueryWrapper.in(SetmealDish::getSetmealId, ids);
+        setmealDishService.remove(setmealDishLambdaQueryWrapper);
+    }
+
+    @Override
+    public void changeStatus(Integer status, List<Long> ids) {
+        List<Setmeal> list = ids.stream().map(id -> {
+            Setmeal setmeal = new Setmeal();
+            setmeal.setStatus(status);
+            setmeal.setId(id);
+            return setmeal;
+        }).collect(Collectors.toList());
+        this.updateBatchById(list);
     }
 
 }

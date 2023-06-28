@@ -52,13 +52,13 @@ public class DishController {
     }
 
     @PostMapping("/status/{status}")
-    public R<String> changeStatus(@PathVariable("status") Integer status, @RequestParam("ids") List<String> ids) {
+    public R<String> changeStatus(@PathVariable("status") Integer status, @RequestParam("ids") List<Long> ids) {
         dishService.updateStatus(status, ids);
         return R.success("Status updated");
     }
 
     @DeleteMapping
-    public R<String> delete(@RequestParam("ids") List<String> ids) {
+    public R<String> delete(@RequestParam("ids") List<Long> ids) {
         dishService.deleteDish(ids);
         return R.success("Dish deleted");
     }

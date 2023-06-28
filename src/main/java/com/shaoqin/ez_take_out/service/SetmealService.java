@@ -6,6 +6,8 @@ import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.dto.SetmealDto;
 import com.shaoqin.ez_take_out.entity.Setmeal;
 
+import java.util.List;
+
 /**
  * ClassName: SetmealService
  * Package: com.shaoqin.ez_take_out.service
@@ -21,5 +23,9 @@ public interface SetmealService extends IService<Setmeal> {
     public void saveWithDish(SetmealDto setmealDto);
 
     public Page<SetmealDto> getSetmealPage(PageDto pageDto);
+
+    public void removeWithDish(List<Long>ids);
+
+    void changeStatus(Integer status, List<Long> ids);
 
 }
