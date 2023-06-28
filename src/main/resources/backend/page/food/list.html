@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="../../plugins/element-ui/index.css" />
   <link rel="stylesheet" href="../../styles/common.css" />
   <link rel="stylesheet" href="../../styles/page.css" />
+  <!-- Needed to prevent checkbox from moving -->
+  <style>
+    .el-table th:first-child > .cell,
+    .el-table td:first-child > .cell {
+      width: 50px;
+    }
+  </style>
 </head>
 <body>
    <div class="dashboard-container" id="food-app">
@@ -200,7 +207,7 @@
 
           // Delete
           deleteHandle (type, id) {
-            if (type === 'Bulk Delete' && id === null) {
+            if (type === 'Bulk' && id === null) {
               if (this.checkList.length === 0) {
                 return this.$message.error('Please select a dish')
               }
@@ -227,7 +234,7 @@
             let params = {}
             if (typeof row === 'string' ) {
               if (this.checkList.length === 0) {
-                this.$message.error('Please select a dish to delete！')
+                this.$message.error('Please select a dish！')
                 return false
               }
               params.id = this.checkList.join(',')

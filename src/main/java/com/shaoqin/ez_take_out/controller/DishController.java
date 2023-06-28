@@ -13,7 +13,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -80,6 +82,20 @@ public class DishController {
         dishService.updateWithFlavor(dishDto);
 
         return R.success("Dish updated");
+    }
+
+    @PostMapping("/status/{status}")
+    public R<String> changeStatus(@PathVariable("status") Integer status, @RequestParam("ids") List<String> ids) {
+        dishService.updateStatus(status, ids);
+
+        return R.success("Status updated");
+    }
+
+    @DeleteMapping
+    public R<String> delete(@RequestParam("ids") List<String> ids) {
+        dishService.deleteDish(ids);
+
+        return R.success("Dish deleted");
     }
 
 }

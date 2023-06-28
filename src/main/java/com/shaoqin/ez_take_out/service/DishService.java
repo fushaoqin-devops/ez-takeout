@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.shaoqin.ez_take_out.dto.DishDto;
 import com.shaoqin.ez_take_out.entity.Dish;
 
+import java.util.List;
+
 /**
  * ClassName: DishService
  * Package: com.shaoqin.ez_take_out.service
@@ -19,5 +21,9 @@ public interface DishService extends IService<Dish> {
     public DishDto getByIdWithFlavor(Long id);
 
     public void updateWithFlavor(DishDto dishDto);
+
+    public void updateStatus(Integer status, List<String> ids);
+
+    public void deleteDish(List<String> ids);
 
 }

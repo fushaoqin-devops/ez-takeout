@@ -78,4 +78,27 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         dishFlavorService.saveBatch(flavors);
     }
 
+    @Override
+    @Transactional
+    public void updateStatus(Integer status, List<String> ids) {
+        List<Dish> list = ids.stream().map(id -> {
+            Dish dish = new Dish();
+            dish.setId(Long.parseLong(id));
+            dish.setStatus(status);
+            return dish;
+        }).toList();
+        this.updateBatchById(list);
+    }
+
+    @Override
+    @Transactional
+    public void deleteDish(List<String> ids) {
+        List<Long> list = ids.stream().map(Long::parseLong).toList();
+        LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(DishFlavor::getDishId, list);
+        this.removeBatchByIds(list);
+        // remove dish flavors that's linked to the dishes
+        dishFlavorService.remove(lambdaQueryWrapper);
+    }
+
 }
