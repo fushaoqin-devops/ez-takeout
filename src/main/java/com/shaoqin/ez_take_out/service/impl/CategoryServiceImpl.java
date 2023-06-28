@@ -6,13 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoqin.ez_take_out.common.CustomException;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Category;
-import com.shaoqin.ez_take_out.entity.Dish;
-import com.shaoqin.ez_take_out.entity.Setmeal;
 import com.shaoqin.ez_take_out.mapper.CategoryMapper;
 import com.shaoqin.ez_take_out.service.CategoryService;
-import com.shaoqin.ez_take_out.service.DishService;
-import com.shaoqin.ez_take_out.service.SetmealService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

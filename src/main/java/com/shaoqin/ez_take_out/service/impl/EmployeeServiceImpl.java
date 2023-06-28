@@ -9,7 +9,6 @@ import com.shaoqin.ez_take_out.entity.Employee;
 import com.shaoqin.ez_take_out.mapper.EmployeeMapper;
 import com.shaoqin.ez_take_out.service.EmployeeService;
 import io.micrometer.common.util.StringUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
