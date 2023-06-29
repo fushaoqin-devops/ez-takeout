@@ -28,4 +28,6 @@ public interface SetmealService extends IService<Setmeal> {
 
     void changeStatus(Integer status, List<Long> ids);
 
+    List<Setmeal> getList(Setmeal setmeal);
+
 }
