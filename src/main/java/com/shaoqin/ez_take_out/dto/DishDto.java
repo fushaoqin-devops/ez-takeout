@@ -24,4 +24,6 @@ public class DishDto extends Dish {
 
     private Integer copies;
 
+    private boolean withFlavors;
+
 }

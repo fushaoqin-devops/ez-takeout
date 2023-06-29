@@ -115,7 +115,8 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     public List<Setmeal> getList(Setmeal setmeal) {
         LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Setmeal::getCategoryId, setmeal.getCategoryId())
-                .eq(Setmeal::getStatus, setmeal.getStatus());
+                .eq(Setmeal::getStatus, setmeal.getStatus())
+                .orderByDesc(Setmeal::getUpdateTime);
         return this.list(lambdaQueryWrapper);
     }
 

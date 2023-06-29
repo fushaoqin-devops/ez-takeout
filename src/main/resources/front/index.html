@@ -50,14 +50,14 @@
               <div>
                 <div class="divName">{{item.name}}</div>
                 <div class="divDesc">{{item.description}}</div>
-                <div class="divDesc">{{'monthly sale' + (item.saleNum ? item.saleNum : 0)  }}</div>
+                <div class="divDesc">{{ (item.saleNum ? item.saleNum : 0) + ' sold this month' }}</div>
                 <div class="divBottom"><span>$</span><span>{{item.price/100}}</span></div>
                 <div class="divNum">
                   <div class="divSubtract" v-if="item.number > 0">
                     <img src="./images/subtract.png" @click.prevent.stop="subtractCart(item)"/>
                   </div>
                   <div class="divDishNum">{{item.number}}</div>
-                  <div class="divTypes" v-if="item.flavors && item.flavors.length > 0 && !item.number " @click.prevent.stop="chooseFlavorClick(item)">选择规格</div>
+                  <div class="divTypes" v-if="item.flavors && item.flavors.length > 0 && !item.number " @click.prevent.stop="chooseFlavorClick(item)">Select</div>
                   <div class="divAdd" v-else>
                     <img src="./images/add.png" @click.prevent.stop="addCart(item)"/>
                   </div>
@@ -158,7 +158,7 @@
                   <img src="./images/subtract.png" @click="subtractCart(detailsDialog.item)"/>
                 </div>
                 <div class="divDishNum">{{detailsDialog.item.number}}</div>
-                <div class="divTypes" v-if="detailsDialog.item.flavors && detailsDialog.item.flavors.length > 0 && !detailsDialog.item.number " @click ="chooseFlavorClick(detailsDialog.item)">选择规格</div>
+                <div class="divTypes" v-if="detailsDialog.item.flavors && detailsDialog.item.flavors.length > 0 && !detailsDialog.item.number " @click ="chooseFlavorClick(detailsDialog.item)">Select</div>
                 <div class="divAdd" v-else>
                   <img src="./images/add.png" @click="addCart(detailsDialog.item)"/>
                 </div>
@@ -318,7 +318,7 @@
               if(!this.categoryId){
                 return
               }
-              const res = await dishListApi({categoryId:this.categoryId,status:1})
+              const res = await dishListApi({categoryId:this.categoryId,status:1,withFlavors:true})
               if(res.code === 1){
                 let dishList = res.data
                 const cartData  = this.cartData

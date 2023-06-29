@@ -144,13 +144,26 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     }
 
     @Override
-    public List<Dish> getDishByCategoryId(Dish dish) {
+    public List<DishDto> getDishByCategoryId(DishDto dish) {
         LambdaQueryWrapper<Dish> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper
                 .eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId())
                 .eq(Dish::getStatus, 1);
         lambdaQueryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
-        return this.list(lambdaQueryWrapper);
+        List<Dish> list = this.list(lambdaQueryWrapper);
+        List<DishDto> dishDtoList = list.stream().map(item -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+            if (dish.isWithFlavors()) {
+                LambdaQueryWrapper<DishFlavor> dishFlavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+                dishFlavorLambdaQueryWrapper.eq(DishFlavor::getDishId, item.getId())
+                        .orderByDesc(DishFlavor::getUpdateTime);
+                List<DishFlavor> dishFlavors = dishFlavorService.list(dishFlavorLambdaQueryWrapper);
+                dishDto.setFlavors(dishFlavors);
+            }
+            return dishDto;
+        }).collect(Collectors.toList());
+        return dishDtoList;
     }
 
 }
