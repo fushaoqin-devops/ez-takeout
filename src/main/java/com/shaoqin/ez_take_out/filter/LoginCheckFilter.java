@@ -41,7 +41,9 @@ public class LoginCheckFilter implements Filter {
                 "/employee/login",
                 "/employee/logout",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/user/sendMsg",
+                "/user/login"
         };
 
         boolean isWhiteList = checkWhiteListUrl(requestURI, urls);
@@ -51,9 +53,19 @@ public class LoginCheckFilter implements Filter {
             return;
         }
 
+        // for employees
         if (request.getSession().getAttribute("employee") != null) {
             Long empId = (Long) request.getSession().getAttribute("employee");
             BaseContext.setCurrentId(empId);
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // for users
+        if (request.getSession().getAttribute("user") != null) {
+            Long userId = (Long) request.getSession().getAttribute("user");
+            BaseContext.setCurrentId(userId);
 
             filterChain.doFilter(request, response);
             return;
