@@ -590,6 +590,10 @@
   display: flex;
   line-height: 36rem;
   height: 36rem;
+  font-size: 15rem;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 500;
+  width: auto;
 }
 
 #main .dialogCart .divCartContent .divCartItem .divNum img {

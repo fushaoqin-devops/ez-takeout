@@ -51,13 +51,13 @@
             mounted(){},
             methods:{
                 getCode(){
-                    this.disableVerification = true;
-                    this.startCountdown();
                     this.form.code = ''
                     const regex = /(^\([2-9]\d{2}\)\s\d{3}-\d{4}$)/;
                     if (regex.test(this.form.phone)) {
                         this.msgFlag = false;
                         sendMsgApi({phone: this.form.phone});
+                        this.disableVerification = true;
+                        this.startCountdown();
                     }else{
                         this.msgFlag = true
                     }
@@ -107,7 +107,7 @@
                         if (this.countdown === 0) {
                             // Reset the countdown and enable the button
                             this.countdown = 59;
-                            this.disableButton = false;
+                            this.disableVerification = false;
 
                             // Clear the countdown timer
                             clearInterval(timer);

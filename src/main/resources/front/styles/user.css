@@ -99,6 +99,9 @@
   position: relative;
   display: flex;
   align-items: center;
+  font-size: 15rem;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 500;
 }
 
 #user .divLinks .divSplit {

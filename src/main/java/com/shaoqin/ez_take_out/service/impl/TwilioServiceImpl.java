@@ -32,9 +32,9 @@ public class TwilioServiceImpl implements TwilioService {
     public String AUTH_TOKEN;
 
     private Service getService(HttpSession session) {
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Service service = (Service) session.getAttribute("twilioService");
         if (service == null) {
-            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
             service = Service.creator("Ez Takeout Login").create();
             session.setAttribute("twilioService", service);
         }
