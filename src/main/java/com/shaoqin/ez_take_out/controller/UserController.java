@@ -42,4 +42,10 @@ public class UserController {
         return R.success(user);
     }
 
+    @PostMapping("/logout")
+    public R<String> logout(HttpServletRequest request) {
+        request.getSession().removeAttribute("user");
+        return R.success("Logout success");
+    }
+
 }
