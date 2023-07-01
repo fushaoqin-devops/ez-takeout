@@ -2,6 +2,7 @@ package com.shaoqin.ez_take_out.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.shaoqin.ez_take_out.common.R;
+import com.shaoqin.ez_take_out.dto.OrderPageDto;
 import com.shaoqin.ez_take_out.dto.OrdersDto;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Orders;
@@ -33,9 +34,21 @@ public class OrderController {
     }
 
     @GetMapping("/userPage")
-    public R<Page<OrdersDto>> get(PageDto pageDto) {
-        Page<OrdersDto> pageInfo = orderService.getOrderPage(pageDto);
+    public R<Page<OrdersDto>> getUserOrderPage(PageDto pageDto) {
+        Page<OrdersDto> pageInfo = orderService.getUserOrderPage(pageDto);
         return R.success(pageInfo);
+    }
+
+    @GetMapping("/page")
+    public R<Page<Orders>> getEmployeeOrderPage(OrderPageDto orderPageDto) {
+        Page<Orders> pageInfo = orderService.getEmployeeOrderPage(orderPageDto);
+        return R.success(pageInfo);
+    }
+
+    @PutMapping
+    public R<String> update(@RequestBody Orders orders) {
+        orderService.updateById(orders);
+        return R.success("Order updated");
     }
 
 }

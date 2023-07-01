@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shaoqin.ez_take_out.common.BaseContext;
 import com.shaoqin.ez_take_out.common.CustomException;
 import com.shaoqin.ez_take_out.dto.DishDto;
+import com.shaoqin.ez_take_out.dto.OrderPageDto;
 import com.shaoqin.ez_take_out.dto.OrdersDto;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.*;
@@ -109,7 +110,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     }
 
     @Override
-    public Page<OrdersDto> getOrderPage(PageDto pageDto) {
+    public Page<OrdersDto> getUserOrderPage(PageDto pageDto) {
         Page<Orders> ordersPage = new Page<>(pageDto.getPage(), pageDto.getPageSize());
         Page<OrdersDto> ordersDtoPage = new Page<>();
 
@@ -135,6 +136,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         ordersDtoPage.setRecords(list);
 
         return ordersDtoPage;
+    }
+
+    @Override
+    public Page<Orders> getEmployeeOrderPage(OrderPageDto orderPageDto) {
+        Page<Orders> ordersPage = new Page<>(orderPageDto.getPage(), orderPageDto.getPageSize());
+        LambdaQueryWrapper<Orders> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(orderPageDto.getNumber() != null, Orders::getNumber, orderPageDto.getNumber());
+        lambdaQueryWrapper.ge(orderPageDto.getBeginTime() != null, Orders::getOrderTime, orderPageDto.getBeginTime());
+        lambdaQueryWrapper.le(orderPageDto.getEndTime() != null, Orders::getOrderTime, orderPageDto.getEndTime());
+        Page<Orders> page = this.page(ordersPage, lambdaQueryWrapper);
+        return page;
     }
 
 }

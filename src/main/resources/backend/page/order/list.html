@@ -32,7 +32,7 @@
     margin-bottom: 0;
   }
   .info-box .item-box .label{
-    width: 96px;
+    width: 138px;
   }
   .info-box .item-box .des{
     flex: 1;
@@ -73,13 +73,17 @@
         <el-table-column prop="orderTime" label="Order Time" min-width="100"></el-table-column>
         <el-table-column prop="amount" label="Amount">
           <template slot-scope="{ row }">
-            <span>￥{{ row.amount }}</span>
+            <span>${{ row.amount }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="btn" label="操作">
           <template slot-scope="{ row }">
             <el-button type="text" @click="goDetail(row)" class="blueBug">
               Detail
+            </el-button>
+            <el-divider v-if="row.status === 1" direction="vertical"></el-divider>
+            <el-button v-if="row.status === 1" type="text" @click="cancelOrDeliveryOrComplete(5, row.id)" class="blueBug">
+              Cancel
             </el-button>
             <el-divider v-if="row.status === 2" direction="vertical"></el-divider>
             <el-button v-if="row.status === 2" type="text" @click="cancelOrDeliveryOrComplete(3, row.id)" class="blueBug">
@@ -232,14 +236,26 @@
           },
           // actions
           cancelOrDeliveryOrComplete (status, id) {
-            this.$confirm('Are you sure you want to cancel?', 'Info', {
+            let confirmMsg = ''
+            switch(status) {
+              case 3:
+                confirmMsg = 'Mark this order delivered?'
+                break;
+              case 4:
+                confirmMsg = 'Mark this order completed?'
+                break;
+              case 5:
+                confirmMsg = 'Cancel this order?'
+                break;
+            }
+            this.$confirm(confirmMsg, 'Info', {
                 'confirmButtonText': 'Confirm',
                 'cancelButtonText': 'Cancel',
                 'type': 'warning'
               }).then(() => {
                 editOrderDetail(params).then(res => {
                   if (res.code === 1) {
-                    this.$message.success(status === 3 ? 'Order Delivered' : 'Order Completed')
+                    this.$message.success(status === 3 ? 'Order Delivered' : (status === 4 ? 'Order Completed' : 'Order Canceled'))
                     this.init()
                   } else {
                     this.$message.error(res.msg || 'Operation failed')

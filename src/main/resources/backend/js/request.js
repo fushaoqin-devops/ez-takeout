@@ -3,7 +3,7 @@
 
   const service = axios.create({
     baseURL: '/',
-    timeout: 10000
+    timeout: 1000000
   })
   // request interceptor
   service.interceptors.request.use(config => {

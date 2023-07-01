@@ -2,6 +2,7 @@ package com.shaoqin.ez_take_out.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.shaoqin.ez_take_out.dto.OrderPageDto;
 import com.shaoqin.ez_take_out.dto.OrdersDto;
 import com.shaoqin.ez_take_out.dto.PageDto;
 import com.shaoqin.ez_take_out.entity.Orders;
@@ -18,6 +19,8 @@ public interface OrderService extends IService<Orders> {
 
     void submit(Orders orders);
 
-    Page<OrdersDto> getOrderPage(PageDto pageDto);
+    Page<OrdersDto> getUserOrderPage(PageDto pageDto);
+
+    Page<Orders> getEmployeeOrderPage(OrderPageDto orderPageDto);
 
 }
