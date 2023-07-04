@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/sendMsg")
     public R<String> sendMsg(@RequestBody User user, HttpServletRequest request) {
-        userService.verify(user, request.getSession());
+        userService.verify(user);
         return R.success("Verification sent");
     }
 

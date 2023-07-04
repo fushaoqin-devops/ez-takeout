@@ -16,5 +16,5 @@ import jakarta.servlet.http.HttpSession;
 public interface UserService extends IService<User> {
     public User login(UserDto userDto, HttpSession session);
 
-    public void verify(User user, HttpSession session);
+    public void verify(User user);
 }
