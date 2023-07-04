@@ -8,6 +8,12 @@ spring:
     url: ${jdbc.url}
     username: ${jdbc.username}
     password: ${jdbc.password}
+  data:
+    redis:
+      host: ${redis.url}
+      port: ${redis.port}
+      password: ${redis.password}
+      database: 0
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
