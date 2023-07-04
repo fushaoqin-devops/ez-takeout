@@ -35,7 +35,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             phone = phone.replaceAll("[-()\\s]", "");
             phone = "+1" + phone;
 
-            boolean isValid = twilioService.checkVerificationCode(code, phone, session);
+            boolean isValid = twilioService.checkVerificationCode(code, phone);
             if (!isValid) throw new CustomException("Invalid code");
 
             // save user if first time login
@@ -60,7 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         phone = phone.replaceAll("[-()\\s]", "");
         phone = "+1" + phone;
-        twilioService.sendVerificationSMS(phone, "123", session);
+        twilioService.sendVerificationSMS(phone, "123");
     }
 
 }

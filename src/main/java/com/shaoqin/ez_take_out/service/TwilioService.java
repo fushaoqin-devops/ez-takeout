@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpSession;
  */
 public interface TwilioService {
 
-    public void sendVerificationSMS(String phone, String verificationCode, HttpSession session);
+    public void sendVerificationSMS(String phone, String verificationCode);
 
-    public boolean checkVerificationCode(String code, String phone, HttpSession session);
+    public boolean checkVerificationCode(String code, String phone);
 
 }

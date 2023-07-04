@@ -2,7 +2,6 @@ package com.shaoqin.ez_take_out.service.impl;
 
 import com.shaoqin.ez_take_out.service.TwilioService;
 import com.twilio.Twilio;
-import com.twilio.rest.verify.v2.Service;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
 import jakarta.servlet.http.HttpSession;
@@ -26,38 +25,33 @@ enum VerificationStatus {
 public class TwilioServiceImpl implements TwilioService {
 
     @Value("${twilio.sid}")
-    public String ACCOUNT_SID;
+    private String ACCOUNT_SID;
 
     @Value("${twilio.token}")
-    public String AUTH_TOKEN;
+    private String AUTH_TOKEN;
 
-    private Service getService(HttpSession session) {
+    @Value("${twilio.service}")
+    private String SERVICE_ID;
+
+    private void init() {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-        Service service = (Service) session.getAttribute("twilioService");
-        if (service == null) {
-            service = Service.creator("Ez Takeout Login").create();
-            session.setAttribute("twilioService", service);
-        }
-        return service;
     }
 
     @Override
-    public void sendVerificationSMS(String phone, String verificationCode, HttpSession session) {
-        Service service = this.getService(session);
-        String sid = service.getSid();
+    public void sendVerificationSMS(String phone, String verificationCode) {
+        this.init();
         Verification verification = Verification.creator(
-                sid,
+                SERVICE_ID,
                 phone,
                 "sms"
         ).create();
     }
 
     @Override
-    public boolean checkVerificationCode(String code, String phone, HttpSession session) {
-        Service service = this.getService(session);
-        String sid = service.getSid();
+    public boolean checkVerificationCode(String code, String phone) {
+        this.init();
         VerificationCheck verificationCheck = VerificationCheck
-                .creator(sid)
+                .creator(SERVICE_ID)
                 .setTo(phone)
                 .setCode(code)
                 .create();
