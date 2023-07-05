@@ -15,6 +15,8 @@ import com.shaoqin.ez_take_out.service.SetmealDishService;
 import com.shaoqin.ez_take_out.service.SetmealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     @Override
     @Transactional
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public void saveWithDish(SetmealDto setmealDto) {
         this.save(setmealDto);
 
@@ -86,6 +89,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     @Override
     @Transactional
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public void removeWithDish(List<Long> ids) {
         LambdaQueryWrapper<Setmeal> setmealLambdaQueryWrapper = new LambdaQueryWrapper<>();
         setmealLambdaQueryWrapper.in(Setmeal::getId, ids).eq(Setmeal::getStatus, 1);
@@ -112,6 +116,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId + '_' + #setmeal.status")
     public List<Setmeal> getList(Setmeal setmeal) {
         LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Setmeal::getCategoryId, setmeal.getCategoryId())
