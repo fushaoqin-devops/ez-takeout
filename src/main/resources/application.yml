@@ -4,10 +4,8 @@ spring:
   application:
     name: ez_take_out
   datasource:
-    driver-class-name: ${jdbc.driver}
+    driver-class-name: ${jdbc.driverClassName}
     url: ${jdbc.url}
-    username: ${jdbc.username}
-    password: ${jdbc.password}
   data:
     redis:
       host: ${redis.url}
