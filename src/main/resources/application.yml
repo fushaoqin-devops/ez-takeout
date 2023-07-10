@@ -25,4 +25,4 @@ mybatis-plus:
 ez_take_out:
 #  local dev
 #  path: /Users/shaoqin/Downloads/test/
-  path: ~/ez-takeout-storage/
+  path: ${fileStorage}
