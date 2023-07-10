@@ -23,4 +23,6 @@ mybatis-plus:
     db-config:
       id-type: ASSIGN_ID
 ez_take_out:
-  path: /Users/shaoqin/Downloads/test/
+#  local dev
+#  path: /Users/shaoqin/Downloads/test/
+  path: ~/ez-takeout-storage/
