@@ -11,7 +11,12 @@ import com.shaoqin.ez_take_out.service.TwilioService;
 import com.shaoqin.ez_take_out.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.swing.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ClassName: UserServiceImpl
@@ -27,6 +32,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private TwilioService twilioService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     @Override
     public User login(UserDto userDto, HttpSession session) {
         String phone = userDto.getPhone();
@@ -35,6 +43,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             phone = phone.replaceAll("[-()\\s]", "");
             phone = "+1" + phone;
 
+            String verification = redisTemplate.opsForValue().get(phone);
+            if (!StringUtils.isNotEmpty(verification)) throw new CustomException("Verification expired");
             boolean isValid = twilioService.checkVerificationCode(code, phone);
             if (!isValid) throw new CustomException("Invalid code");
 
@@ -48,19 +58,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 this.save(user);
             }
             session.setAttribute("user", user.getId());
+            redisTemplate.delete(phone);
             return user;
         }
         throw new CustomException("Invalid credentials");
     }
 
     @Override
-    public void verify(User user, HttpSession session) {
+    public void verify(User user) {
         String phone = user.getPhone();
         if (StringUtils.isEmpty(phone)) throw new CustomException("Failed to send verification");
 
         phone = phone.replaceAll("[-()\\s]", "");
         phone = "+1" + phone;
         twilioService.sendVerificationSMS(phone, "123");
+        redisTemplate.opsForValue().set(phone, "VERIFICATION_PENDING", 5, TimeUnit.MINUTES);
     }
 
 }
