@@ -26,6 +26,7 @@ This project is a comprehensive backend management system and frontend delivery 
 - Redis: Used for caching user verification and dish categories, improving application performance.
 - MySQL: Utilizes a master-slave database setup to distribute the read-write load effectively.
 - Twilio: Integrates Twilio Service for user authentication via text verification.
+- Vue: Interact with variables and api calls.
 - Nginx: Hosts the frontend pages and implements reverse proxy for API calls, ensuring seamless integration.
 - Linux Deployment: The backend and frontend are deployed on separate Linux servers.
 - GitHub Integration: Utilizes a shell script to automatically pull the latest code from the main branch on GitHub and redeploy on the Linux servers.
