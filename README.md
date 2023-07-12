@@ -3,6 +3,9 @@
 This project is a comprehensive backend management system and frontend delivery app for a restaurant. It enables the administration of internal workers, management of deliveries, and provides a user-friendly interface for customers to place orders.
 This project showcases best practices for building a robust backend management system and a user-friendly frontend delivery app using Spring Boot MVC. It also focuses on deploying the application on Linux, implementing master-slave MySQL database architecture, and utilizing Redis for caching. By applying these technologies and techniques, the project aims to deliver an efficient and reliable restaurant management and delivery solution.
 
+## Demo
+- Check out my project demos on my [github pages](https://fushaoqin-devops.github.io/)
+
 ## Features
 
 ### Backend Management System
